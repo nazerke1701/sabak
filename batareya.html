@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Батарея — бағалау</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+:root{--bg:#0b0720;--line:#8b6cff66;--r:#ff4d4d;--y:#ffd23f;--g:#34d399}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:#f3efff;font-family:Poppins,'Segoe UI',Arial,sans-serif;
+  background:radial-gradient(ellipse at 80% 8%,#4a1d9a88,transparent 45%),radial-gradient(ellipse at 10% 70%,#1f2a8a66,transparent 45%),var(--bg)}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 3vw;border-bottom:1px solid var(--line);background:#0d0826ea;position:sticky;top:0;z-index:5}
+h1{margin:0;font-size:clamp(18px,2.6vw,28px);font-weight:800;background:linear-gradient(90deg,#ff4d9a,#ff8a4c,#5b8cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,input{font-family:inherit;font-size:14px;font-weight:600;border-radius:9px;border:0;padding:10px 16px;cursor:pointer;color:#fff}
+button{background:linear-gradient(180deg,#ff6a3d,#e0441f)}
+button.sec{background:transparent;border:1px solid #a98bff;color:#e5dcff}
+button.on{background:linear-gradient(180deg,#8b5cf6,#6d3fd8);border:0}
+button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+label{font-size:14px;color:#b9b0e0}
+input{width:70px;background:#1a1245;border:1px solid var(--line);cursor:text}
+.hint{padding:10px 3vw 0;color:#b9b0e0;font-size:14px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:22px 16px;padding:22px 3vw 60px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:8px}
+.bat{position:relative;width:78px;height:150px;border:4px solid #d9d2f5;border-radius:12px;padding:5px;display:flex;flex-direction:column-reverse;gap:4px;cursor:pointer;background:#ffffff10;transition:transform .15s;user-select:none;-webkit-tap-highlight-color:transparent}
+.bat:before{content:"";position:absolute;left:50%;top:-12px;width:28px;height:8px;transform:translateX(-50%);background:#d9d2f5;border-radius:4px 4px 0 0}
+.bat:active{transform:scale(.96)}
+.bar{flex:1;border-radius:4px;background:#ffffff0d}
+.bar.f.r{background:var(--r)}.bar.f.y{background:var(--y)}.bar.f.g{background:var(--g)}
+.nm{min-width:78px;max-width:110px;text-align:center;padding:6px 8px;border-radius:7px;font-size:13px;font-weight:600;background:#b0467a;color:#fff;outline:none;word-break:break-word}
+.nm:focus{box-shadow:0 0 0 2px #fff}
+.lv{font-size:12px;color:#b9b0e0}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔋 Келесі бағалау түрі: батарея</h1>
+  <div class="ctl">
+    <button id="mp" class="on" onclick="setM(1)">＋ Қосу</button>
+    <button id="mm" class="sec" onclick="setM(-1)">－ Алу</button>
+    <label>Оқушы саны <input id="n" type="number" min="1" max="40" value="24" onchange="setN()"></label>
+    <button class="sec" onclick="resetL()">Деңгейді тазалау</button>
+    <button class="sec" onclick="resetN()">Аттарды тазалау</button>
+    <button class="sec" onclick="fsT()">⛶</button>
+  </div>
+</header>
+<div class="hint">Батареяны бас: деңгей көтеріледі (1–2 қызыл, 3–4 сары, 5 жасыл). «АТЫ» жазуын басып, оқушының атын жаз.</div>
+<div id="grid"></div>
+
+<script>
+const MAX=5, KEY='bat1';
+let mode=1, d=[];
+const $=id=>document.getElementById(id);
+function load(){
+  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(Array.isArray(s)&&s.length) d=s; }catch(e){}
+  if(!d.length) d=Array.from({length:24},()=>({n:'АТЫ',l:0}));
+  $('n').value=d.length;
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+function col(k){ return k<=2?'r':k<=4?'y':'g'; }
+function render(){
+  $('grid').innerHTML=d.map((s,k)=>{
+    let bars='';
+    for(let j=1;j<=MAX;j++) bars+='<div class="bar'+(j<=s.l?' f '+col(j):'')+'"></div>';
+    return '<div class="cell"><div class="bat" data-i="'+k+'" role="button" aria-label="Батарея '+(k+1)+'">'+bars+'</div>'+
+      '<div class="nm" contenteditable="true" data-i="'+k+'"></div><div class="lv">'+s.l+' / '+MAX+'</div></div>';
+  }).join('');
+  document.querySelectorAll('.nm').forEach(e=>e.textContent=d[e.dataset.i].n);
+}
+$('grid').addEventListener('click',e=>{
+  const b=e.target.closest('.bat'); if(!b) return;
+  const s=d[b.dataset.i];
+  s.l=Math.max(0,Math.min(MAX,s.l+mode));
+  save(); render();
+});
+$('grid').addEventListener('input',e=>{
+  if(e.target.classList.contains('nm')){ d[e.target.dataset.i].n=e.target.textContent; save(); }
+});
+$('grid').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.classList.contains('nm')){ e.preventDefault(); e.target.blur(); } });
+function setM(m){ mode=m; $('mp').className=m>0?'on':'sec'; $('mm').className=m<0?'on':'sec'; }
+function setN(){
+  const n=Math.max(1,Math.min(40,+$('n').value||1));
+  while(d.length<n) d.push({n:'АТЫ',l:0});
+  d.length=n; save(); render();
+}
+function resetL(){ d.forEach(s=>s.l=0); save(); render(); }
+function resetN(){ d.forEach(s=>s.n='АТЫ'); save(); render(); }
+function fsT(){ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen(); }
+load(); render();
+</script>
+</body>
+</html>
