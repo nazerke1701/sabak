@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Код сапасы — сабақ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+:root{--pink:#ff4d9a;--org:#ff6a3d;--blue:#5b8cff;--vio:#8b5cf6;--bg:#0b0720;--card:#1a1245cc;--line:#8b6cff55;--tx:#f3efff;--mut:#b9b0e0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--tx);font-family:Poppins,'Segoe UI',Arial,sans-serif;min-height:100vh;
+  background:radial-gradient(ellipse at 80% 12%,#4a1d9a88,transparent 45%),radial-gradient(ellipse at 10% 60%,#1f2a8a66,transparent 45%),radial-gradient(ellipse at 70% 100%,#a3217a55,transparent 40%),var(--bg)}
+body:after{content:"";position:fixed;left:0;right:0;bottom:0;height:34vh;pointer-events:none;z-index:-1;opacity:.55;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%235b8cff'/%3E%3Cstop offset='.5' stop-color='%23ff4d9a'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 200C200 80 380 260 600 170S980 90 1200 190' fill='none' stroke='url(%23g)' stroke-width='5'/%3E%3Cpath d='M0 235C220 130 400 290 620 205S990 130 1200 225' fill='none' stroke='url(%23g)' stroke-width='2' opacity='.6'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+a{color:#9db8ff}
+
+header,footer{position:fixed;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 5vw;background:#0d0826ea;backdrop-filter:blur(10px)}
+header{top:0;border-bottom:1px solid var(--line)}
+footer{bottom:0;border-top:1px solid var(--line)}
+.logo{font-weight:700;font-size:20px;background:linear-gradient(90deg,#c4a8ff,#8bb0ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.status{color:var(--mut);font-size:14px}
+#xp{background:linear-gradient(180deg,var(--org),#e0441f);padding:8px 16px;border-radius:8px;font-weight:600;font-size:14px}
+main{max-width:1020px;margin:96px auto 90px;padding:20px 24px}
+
+.screen{display:none;animation:in .35s}
+.screen.active{display:block}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.screen{animation:none}}
+
+h1,h2,h3{margin:0 0 12px;line-height:1.15}
+h1{font-size:clamp(40px,7vw,76px);font-weight:800}
+h2{font-size:clamp(26px,4vw,38px);font-weight:700}
+h3{font-size:20px;font-weight:600}
+.pk{color:var(--pink)}.og{color:#ff8a4c}.bl{color:var(--blue)}
+.grad{background:linear-gradient(90deg,var(--pink),#ff8a4c,var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:15px;margin:0 0 18px}
+p{font-size:18px;line-height:1.55;color:#d9d2f5;margin:8px 0}
+.small{font-size:14px;color:var(--mut)}
+
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:center;min-height:62vh}
+.hero p{max-width:440px}
+.stage{text-align:center;position:relative}
+.rocket{font-size:clamp(110px,18vw,190px);filter:drop-shadow(0 0 40px #ff4d9a99);animation:fl 4s ease-in-out infinite alternate}
+.stage:after{content:"";display:block;height:34px;margin:-6px auto 0;width:75%;border-radius:50%;background:radial-gradient(ellipse,#8b5cf6aa,transparent 70%)}
+@keyframes fl{to{transform:translateY(-14px)}}
+@media(prefers-reduced-motion:reduce){.rocket{animation:none}}
+@media(max-width:760px){.hero{grid-template-columns:1fr;text-align:center}.hero p{margin:auto}}
+
+.panel,.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 8px 30px #0006,inset 0 1px 0 #ffffff12;backdrop-filter:blur(6px)}
+.panel{margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px;margin:18px 0}
+.tile{cursor:pointer;transition:.2s}
+.tile:hover,.tile:focus-visible{border-color:#b79bff;transform:translateY(-3px);outline:none}
+.tile p{font-size:15px;margin:4px 0}
+.tile.done{border-color:#34d399;background:#0f3a3099}
+.ic{font-size:34px;display:block;margin-bottom:6px}
+.tag{font-size:12px;color:#ff9acb;font-weight:600}
+
+button,.btn{font-family:inherit;font-size:15px;font-weight:600;color:#fff;cursor:pointer;border:0;border-radius:9px;padding:13px 22px;margin:6px 6px 6px 0;text-decoration:none;display:inline-block;
+  background:linear-gradient(180deg,var(--org),#e0441f);box-shadow:0 6px 18px #ff6a3d44}
+button:hover,.btn:hover{filter:brightness(1.12)}
+button:focus-visible,.btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.sec{background:transparent;border:1px solid #a98bff;box-shadow:none;color:#e5dcff}
+.violet{background:linear-gradient(180deg,#8b5cf6,#6d3fd8);box-shadow:0 6px 18px #8b5cf644}
+.option{display:block;width:100%;text-align:left;margin:9px 0;font-weight:500;font-size:17px;background:#1a1245;border:1px solid var(--line);box-shadow:none}
+.correct{border-color:#34d399!important;background:#0f3a30!important}
+.wrong{border-color:#ff5478!important;background:#3a1728!important}
+button.ok{background:#0f3a30;border:1px solid #34d399;box-shadow:none}
+
+.fb{color:#8bd6ff;min-height:26px;font-size:17px}
+pre{white-space:pre-wrap;background:#080518;color:#8fe9ff;border:1px solid #6d5cd444;border-radius:10px;padding:14px;font:15px/1.5 Consolas,'Courier New',monospace;margin:8px 0}
+code{color:#8fe9ff;font-family:Consolas,monospace}
+ul{margin:8px 0;padding-left:22px;line-height:1.6;color:#d9d2f5;font-size:17px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.bad{color:#ff8aa5}
+.quote{border-left:3px solid var(--vio);padding:4px 16px;margin:16px 0;color:#d6c7ff;font-style:italic;max-width:520px}
+
+.steps{list-style:none;padding:0;margin:10px 0}
+.steps label{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;margin:8px 0;background:#ffffff08;border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:17px;line-height:1.45}
+.steps input{width:20px;height:20px;margin-top:3px;accent-color:#ff6a3d;flex:none}
+.steps label:has(input:checked){border-color:#34d399;background:#0f3a3066}
+details{margin:12px 0}
+summary{cursor:pointer;color:#b79bff;font-weight:600}
+.exp{border-left:3px solid #34d399;padding:2px 14px;margin:10px 0;color:#bff5dc}
+
+.vwrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.vwrap.vert{aspect-ratio:9/16;max-width:340px;margin:0 auto}
+.vwrap video,.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vh{text-align:center;min-height:20px}
+#pb{position:fixed;left:0;bottom:0;height:3px;z-index:9;width:0;background:linear-gradient(90deg,var(--blue),var(--pink),var(--org));transition:.3s}
+footer button{padding:10px 16px;margin:0}
+@media(max-width:600px){main{padding:14px}.status{display:none}.panel,.tile{padding:16px}}
+</style>
+</head>
+<body>
+<div id="pb"></div>
+
+<header>
+  <div class="logo">🚀 Код сапасы</div>
+  <div class="status">Информатика · Бағдарламалау</div>
+  <div id="xp">XP: <b>0</b></div>
+</header>
+
+<main id="main">
+
+<!-- 0 -->
+<section class="screen active"><div class="hero">
+  <div>
+    <h1><span class="pk">Түсін.</span><br><span class="og">Талда.</span><br><span class="bl">Жақсарт.</span></h1>
+    <p>Код сапасын бағалау критерийлері: жақсы код оңай оқылады, сенімді жұмыс істейді және өзгертуге жеңіл.</p>
+    <div class="quote">«Жақсы код — кез келген адам оңай түсіне алатын код.»</div>
+    <button onclick="show(1)">Сабақты бастау</button>
+    <button class="sec" onclick="show(5)">Сабақ мақсаты</button>
+  </div>
+  <div class="stage"><div class="rocket">🚀</div></div>
+</div></section>
+
+<!-- 1 -->
+<section class="screen">
+  <h2 class="grad">Бейне кіріспе</h2>
+  <div class="panel">
+    <div class="vwrap" data-src="https://youtube.com/shorts/yqoyjC8M4yU?feature=share"></div>
+    <p class="small vh"></p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="screen">
+  <h2 class="grad">Үй тапсырмасын тексеру</h2>
+  <div class="panel"><h3>Өткен сабақты еске түсірейік</h3>
+    <ul><li>Үй тапсырмасын кім орындады? Нәтижесімен бөліс.</li><li>Қай жерде қиындық кездесті?</li><li>Өз кодыңды көрсетіп, қысқаша түсіндір.</li></ul>
+  </div>
+  <div class="grid">
+    <div class="tile"><span class="ic">✅</span><h3>Орындалды</h3><p>Нәтижені серіктесіңе көрсет.</p></div>
+    <div class="tile"><span class="ic">🔧</span><h3>Қиындық болды</h3><p>Сұрақ қойып, бірге талқылаймыз.</p></div>
+    <div class="tile"><span class="ic">⭐</span><h3>Бағалау</h3><p>Мұғалім үй жұмысына XP береді.</p></div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="screen">
+  <h2 class="grad">Психологиялық ахуал</h2>
+  <div class="panel">
+    <div class="vwrap" data-src="https://youtube.com/shorts/SKEbBnTgp9g"></div>
+    <p class="small vh"></p>
+    <h3>Бүгінгі көңіл-күйің қандай?</h3>
+    <button class="sec" onclick="mood('Керемет! Бүгін тамаша жұмыс істейміз 🚀')">😄 Өте жақсы</button>
+    <button class="sec" onclick="mood('Жақсы! Бірге бастайық 👍')">🙂 Жақсы</button>
+    <button class="sec" onclick="mood('Түсінікті. Сабақ барысында бірге қолдау көрсетеміз 💙')">😐 Орташа</button>
+    <div class="fb" id="moodF"></div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="screen">
+  <h2 class="grad">Код сапасын бағалау дегеніміз не?</h2>
+  <div class="panel">
+    <p><b>Код сапасы</b> — бағдарламалық кодтың түсінікті, сенімді, қауіпсіз әрі өзгертуге оңай болу дәрежесі.</p>
+    <p><b>Критерийлер</b> — кодтың жақсы не нашар екенін анықтайтын өлшемдер. Олар кодты талдап, кемшіліктерін табуға көмектеседі.</p>
+  </div>
+  <div class="grid">
+    <div class="tile"><span class="ic">💡</span><h3>Неге маңызды?</h3><p>Сапалы код қатені азайтады және уақытты үнемдейді.</p></div>
+    <div class="tile"><span class="ic">👥</span><h3>Кім қолданады?</h3><p>Бағдарламашылар, тестерлер, команда мүшелері.</p></div>
+    <div class="tile"><span class="ic">📏</span><h3>Қалай бағалаймыз?</h3><p>8 негізгі критерий арқылы.</p></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="screen">
+  <h2 class="grad">Сабақтың мақсаты</h2>
+  <div class="grid">
+    <div class="tile"><span class="ic">📚</span><h3>Білу</h3><p>Код сапасының негізгі критерийлерін атау.</p></div>
+    <div class="tile"><span class="ic">🔍</span><h3>Талдау</h3><p>Код сипаттамасындағы кемшіліктерді анықтау.</p></div>
+    <div class="tile"><span class="ic">⚖️</span><h3>Бағалау</h3><p>Сапалы және сапасыз кодты ажырату.</p></div>
+    <div class="tile"><span class="ic">🛠️</span><h3>Қолдану</h3><p>Өз кодыңды жақсартып жазу.</p></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="screen">
+  <h2 class="grad">8 негізгі критерий</h2>
+  <p>Карточканы басып, толығырақ оқы.</p>
+  <div class="grid" id="crit"></div>
+  <div class="panel" id="cd"><h3>Критерийді таңда</h3><p>Мысал мен түсіндірме осында шығады.</p></div>
+</section>
+
+<!-- 7 -->
+<section class="screen">
+  <h2 class="grad">Қай код жақсы?</h2>
+  <div class="two">
+    <div class="panel"><h3 class="bad">A нұсқасы</h3><pre>let x = 25;
+let y = 5;
+let z = x * y;</pre></div>
+    <div class="panel"><h3>B нұсқасы</h3><pre>let price = 25;
+let quantity = 5;
+let total = price * quantity;</pre></div>
+  </div>
+  <div class="panel">
+    <p>Қай нұсқада оқылымдылық жақсырақ?</p>
+    <button class="option" onclick="sec(0,this)">A) Қысқа, сондықтан жақсы</button>
+    <button class="option" onclick="sec(1,this)">B) Айнымалы атаулары мағыналы</button>
+    <div class="fb" id="secF"></div>
+  </div>
+</section>
+
+<!-- 8: тапсырма мәзірі -->
+<section class="screen">
+  <h2 class="grad">Практика: өз компьютеріңде орында</h2>
+  <div class="panel">
+    <h3>Қалай жұмыс істейміз?</h3>
+    <ul>
+      <li>Python-ды компьютеріңде аш (Thonny, IDLE, VS Code) немесе онлайн редактор қолдан.</li>
+      <li>Беттегі кодты көшіріп, редакторға қой, тапсырманы орында.</li>
+      <li>Әр қадамды орындап, белгі қой. Барлығы белгіленгенде «Орындадым» батырмасы қосылады.</li>
+    </ul>
+    <a class="btn violet" href="https://www.online-python.com/" target="_blank" rel="noopener">Онлайн Python редакторын ашу ↗</a>
+  </div>
+  <div class="grid" id="menu"></div>
+</section>
+
+<!-- 9–13: тапсырмалар JS арқылы осында қосылады -->
+
+<!-- 14 -->
+<section class="screen" id="concl">
+  <h2 class="grad">Сабақ қорытындысы</h2>
+  <div class="panel">
+    <h3>Бүгін біз не үйрендік?</h3>
+    <ul>
+      <li>Код сапасы — кодтың түсінікті, сенімді, қауіпсіз әрі өзгертуге оңай болуы.</li>
+      <li>Сапаны 8 критерий арқылы бағалаймыз: оқылымдылық, сүйемелденушілік, сенімділік, тиімділік, қауіпсіздік, тестіленушілік, модульділік, стандарттарды сақтау.</li>
+      <li>Мағыналы атаулар мен түсініктемелер кодты оқуды жеңілдетеді.</li>
+      <li>Сапалы код қатені азайтады және уақытты үнемдейді.</li>
+    </ul>
+  </div>
+  <div class="grid">
+    <div class="tile"><span class="ic">🎯</span><h3>Білдім</h3><p>Критерийлерді атай аламын.</p></div>
+    <div class="tile"><span class="ic">🔍</span><h3>Талдай аламын</h3><p>Кодтағы кемшілікті таба аламын.</p></div>
+    <div class="tile"><span class="ic">🛠️</span><h3>Қолдана аламын</h3><p>Өз кодымды жақсарта аламын.</p></div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="screen">
+  <h2 class="grad">Үйге тапсырма</h2>
+  <div class="panel"><h3>Кодты бағалау есебі</h3>
+    <ul>
+      <li>Кез келген өз бағдарламаңды (10–20 жол) таңда.</li>
+      <li>8 критерий бойынша кесте толтырып, әрқайсысына 1–5 балл қой.</li>
+      <li>Ең кемі 2 кемшілікті тауып, кодты жақсартып қайта жаз.</li>
+      <li>«Қай критерий ең маңызды және неге?» — 3 сөйлем жаз.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="screen"><div class="hero" style="grid-template-columns:1fr;text-align:center">
+  <div>
+    <h1 class="grad">Сабақ аяқталды</h1>
+    <div class="panel"><h2 id="fs">0 XP</h2><p id="fm"></p></div>
+    <button onclick="resetAll()">Қайта бастау ↻</button>
+  </div>
+</div></section>
+
+</main>
+
+<footer>
+  <button id="prev" class="sec" onclick="show(i-1)">← Артқа</button>
+  <span class="small"><span id="cnt"></span> <button class="sec" onclick="fsT()" title="Толық экран (F)">⛶</button></span>
+  <button id="next" onclick="show(i+1)">Келесі →</button>
+</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+
+/* ТАПСЫРМАЛАР: студент өз компьютерінде орындайды */
+const T=[
+ {t:'Оқылымдылық',h:'Айнымалыларды өзгерт',
+  d:'Төмендегі кодта айнымалылардың аты түсініксіз. Оларды мағыналы атпен ауыстыр.',
+  steps:['Python редакторын аш (Thonny, IDLE немесе онлайн редактор).','Кодты көшіріп, редакторға қой.','a, b, c орнына price, quantity, total сияқты атаулар жаз.','Бағдарламаны іске қос. Нәтиже өзгермеуі керек.'],
+  code:'a = 10\nb = 3\nc = a * b\nprint(c)',
+  out:'30',
+  sol:'price = 10\nquantity = 3\ntotal = price * quantity\nprint(total)'},
+ {t:'Сүйемелденушілік',h:'Кодқа түсініктеме жаз',
+  d:'Кодтың әр жолына # белгісімен қысқа түсініктеме (комментарий) жаз.',
+  steps:['Кодты редакторға қой.','Әр жолдың үстіне # арқылы не істейтінін жаз.','Бағдарламаны іске қос: түсініктеме жұмысқа әсер етпейтінін тексер.'],
+  code:'price = 500\nquantity = 3\ntotal = price * quantity\nprint(total)',
+  out:'1500',
+  sol:'# Бір дананың бағасы\nprice = 500\n# Саны\nquantity = 3\n# Жалпы сома\ntotal = price * quantity\n# Нәтижені экранға шығару\nprint(total)'},
+ {t:'Модульділік',h:'Функцияларға бөл',
+  d:'Кодты екі функцияға бөл: біріншісі қосындыны есептесін, екіншісі нәтижені шығарсын.',
+  steps:['Кодты редакторға қой.','def sum_numbers(a, b) функциясын жаз: ол a + b қайтарсын.','def show_result(value) функциясын жаз: ол нәтижені print арқылы шығарсын.','Функцияларды шақырып, бағдарламаны іске қос.'],
+  code:'a = 10\nb = 20\nresult = a + b\nprint(result)',
+  out:'30',
+  sol:'def sum_numbers(a, b):\n    return a + b\n\ndef show_result(value):\n    print(value)\n\nshow_result(sum_numbers(10, 20))'},
+ {t:'Сенімділік',h:'Қатені тап және түзет',
+  d:'Функция нөлге бөлгенде қате береді. Кодты қорға.',
+  steps:['Кодты редакторға қой да, bol(5, 0) шақырып көр: қате шығады.','Функцияның басына b == 0 екенін тексеретін шарт қос.','b = 0 болса, «Нөлге бөлуге болмайды» деп қайтарсын.','bol(10, 2) және bol(5, 0) екеуін де тексер.'],
+  code:'def bol(a, b):\n    return a / b\n\nprint(bol(10, 2))\nprint(bol(5, 0))',
+  out:'5.0 және «Нөлге бөлуге болмайды»',
+  sol:'def bol(a, b):\n    if b == 0:\n        return "Нөлге бөлуге болмайды"\n    return a / b\n\nprint(bol(10, 2))\nprint(bol(5, 0))'},
+ {t:'Бағалау',h:'Өз кодыңды бағала',
+  d:'Бұрынғы тапсырмалардағы кодтардың бірін таңдап, 8 критерий бойынша бағала.',
+  steps:['Бір кодты таңда (1–4 тапсырмадан немесе өз бағдарламаңнан).','Дәптерге немесе файлға 8 критерийді жазып, әрқайсысына 1–5 балл қой.','Ең төмен баллды критерийді тап.','Сол критерий бойынша кодты жақсартып, қайта іске қос.'],
+  code:'Критерийлер:\n1. Оқылымдылық      __/5\n2. Сүйемелденушілік __/5\n3. Сенімділік       __/5\n4. Тиімділік        __/5\n5. Қауіпсіздік      __/5\n6. Тестіленушілік   __/5\n7. Модульділік      __/5\n8. Стандарттар      __/5',
+  out:'Ең әлсіз критерий табылып, код жақсартылды',
+  sol:'Мысал: ең әлсіз критерий — оқылымдылық. Түзету: a, b, c айнымалыларын price, quantity, total деп атадым.'}
+];
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+$('menu').innerHTML=T.map((x,k)=>'<div class="tile" id="tt'+(k+1)+'" tabindex="0" onclick="show('+(9+k)+')"><span class="tag">ТАПСЫРМА '+(k+1)+'</span><h3>'+x.t+'</h3><p>'+x.h+'</p></div>').join('');
+const concl=$('concl');
+T.forEach((x,k)=>{
+  const n=k+1, s=document.createElement('section');
+  s.className='screen'; s.id='t'+n; s.dataset.steps=x.steps.length;
+  s.innerHTML='<span class="tag">ТАПСЫРМА '+n+' · '+x.t+'</span><h2 class="grad">'+x.h+'</h2>'+
+  '<div class="panel"><p>'+x.d+'</p>'+
+  '<h3>Қадамдар</h3><div class="steps">'+x.steps.map(z=>'<label><input type="checkbox" onchange="chk('+n+')"><span>'+z+'</span></label>').join('')+'</div>'+
+  '<h3>Бастапқы код</h3><pre>'+esc(x.code)+'</pre>'+
+  '<button class="sec" onclick="copyC(this)">📋 Кодты көшіру</button>'+
+  '<a class="btn violet" href="https://www.online-python.com/" target="_blank" rel="noopener">Онлайн редактор ↗</a>'+
+  '<div class="exp"><b>Күтілетін нәтиже:</b> '+esc(x.out)+'</div>'+
+  '<details><summary>Өзімді тексеремін: үлгі жауап</summary><pre>'+esc(x.sol)+'</pre></details>'+
+  '<div class="fb" id="fb'+n+'"></div>'+
+  '<button id="done'+n+'" onclick="completeTask('+n+',this)" disabled>Орындадым +10 XP</button>'+
+  '<button class="sec" onclick="show(8)">← Тапсырмаларға қайту</button></div>';
+  concl.parentNode.insertBefore(s,concl);
+});
+function chk(n){
+  const s=$('t'+n), all=s.querySelectorAll('input').length, on=s.querySelectorAll('input:checked').length;
+  if(!completedTasks.has(n)) $('done'+n).disabled=on<all;
+  $('fb'+n).textContent=completedTasks.has(n)?$('fb'+n).textContent:(on<all?on+' / '+all+' қадам орындалды':'Барлық қадам орындалды. Батырманы бас!');
+}
+function copyC(b){
+  const t=b.previousElementSibling.textContent;
+  const ok=()=>{b.textContent='✓ Көшірілді';setTimeout(()=>b.textContent='📋 Кодты көшіру',1500)};
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(ok,()=>{});
+}
+
+/* БЕТТЕР */
+const S=[...document.querySelectorAll('.screen')];
+let i=0, xp=0, sd=false;
+const completedTasks=new Set();
+const cd0=$('cd').innerHTML;
+
+function show(n){
+  stopV();
+  i=Math.max(0,Math.min(S.length-1,n));
+  S.forEach((s,k)=>s.classList.toggle('active',k===i));
+  $('cnt').textContent=(i+1)+' / '+S.length;
+  $('pb').style.width=((i+1)/S.length*100)+'%';
+  $('prev').disabled=(i===0);
+  $('next').disabled=(i===S.length-1);
+  if(i===S.length-1){
+    $('fs').textContent=xp+' XP';
+    $('fm').textContent=xp>=40?'Керемет! Критерийлерді жақсы меңгердің.':'Жақсы жұмыс! Материалды қайталап көр.';
+  }
+  scrollTo(0,0);
+  loadV();
+}
+
+/* ВИДЕО */
+function loadV(){
+  S[i].querySelectorAll('.vwrap').forEach(w=>{
+    if(w.dataset.b) return;
+    w.dataset.b=1;
+    const src=w.dataset.src, hint=w.nextElementSibling;
+    const yt=src.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);
+    if(yt){
+      w.classList.toggle('vert',/shorts\//.test(src));
+      w.innerHTML='<iframe src="https://www.youtube.com/embed/'+yt[1]+'" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media;picture-in-picture" allowfullscreen></iframe>';
+      hint.innerHTML='Видео ашылмаса: <a href="https://www.youtube.com/watch?v='+yt[1]+'" target="_blank" rel="noopener">YouTube-та ашу ↗</a>';
+    } else {
+      w.innerHTML='<video controls playsinline preload="metadata" src="'+src+'"></video>';
+      hint.textContent='';
+      w.firstChild.onerror=()=>{hint.textContent='Видео табылмады: "'+src+'"'};
+    }
+  });
+}
+function stopV(){
+  document.querySelectorAll('.vwrap').forEach(w=>{
+    const v=w.querySelector('video'); if(v) v.pause();
+    if(w.querySelector('iframe')){ w.innerHTML=''; w.dataset.b=''; }
+  });
+}
+
+/* XP */
+function addXP(n){ xp+=n; $('xp').innerHTML='XP: <b>'+xp+'</b>'; }
+function mood(t){ $('moodF').textContent=t; }
+function sec(ok,e){
+  if(sd) return; sd=true;
+  e.classList.add(ok?'correct':'wrong');
+  $('secF').textContent=ok?'Дұрыс! Мағыналы атаулар кодты оқуды жеңілдетеді. +10 XP':'Қысқалық емес, түсініктілік маңызды: B нұсқасы жақсы.';
+  if(ok) addXP(10);
+}
+function completeTask(n,btn){
+  if(completedTasks.has(n)) return;
+  completedTasks.add(n);
+  btn.classList.add('ok'); btn.textContent='Орындалды ✓'; btn.disabled=true;
+  $('fb'+n).textContent='Тамаша! +10 XP 🚀';
+  $('tt'+n).classList.add('done');
+  addXP(10);
+}
+function resetAll(){
+  xp=0; sd=false; completedTasks.clear();
+  $('xp').innerHTML='XP: <b>0</b>';
+  document.querySelectorAll('.done').forEach(t=>t.classList.remove('done'));
+  document.querySelectorAll('.option').forEach(o=>o.classList.remove('correct','wrong'));
+  document.querySelectorAll('.steps input').forEach(c=>c.checked=false);
+  T.forEach((x,k)=>{const b=$('done'+(k+1));b.classList.remove('ok');b.disabled=true;b.textContent='Орындадым +10 XP';$('fb'+(k+1)).textContent='';});
+  $('secF').textContent=''; $('moodF').textContent=''; $('cd').innerHTML=cd0;
+  show(0);
+}
+function fsT(){ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen(); }
+
+/* 8 критерий */
+const C=[
+ ['Оқылымдылық','Оқылымдылық — бағдарламалық кодтың құрылымы мен жазылуының түсінікті, жүйелі және оқуға жеңіл болуы. Кодты басқа бағдарламашы да оңай түсініп, оның қалай жұмыс істейтінін тез анықтай алуы керек.','price, total — x, z-ке қарағанда түсінікті.'],
+ ['Сүйемелденушілік','Сүйемелденушілік — бағдарламалық кодты уақыт өте келе өзгерту, жаңарту, түзету және жетілдіру мүмкіндігі. Сапалы код жаңа талаптарға оңай бейімделіп, оны өзгерту кезінде басқа бөліктердің жұмысына кері әсер етпеуі тиіс.','Түсініктеме мен реттелген құрылым.'],
+ ['Сенімділік','Сенімділік — бағдарламаның әртүрлі жағдайларда тұрақты, дұрыс және үздіксіз жұмыс істеу қабілеті. Бағдарлама күтпеген жағдайларда да өз жұмысын тоқтатпай, қателерді дұрыс өңдеуі қажет.','Нөлге бөлуді тексеру.'],
+ ['Тиімділік','Тиімділік — бағдарламаның компьютер ресурстарын, уақытты және жад көлемін оңтайлы пайдаланып, тапсырмаларды жылдам орындау қабілеті.','Артық циклдерден аулақ болу.'],
+ ['Қауіпсіздік','Қауіпсіздік — бағдарламалық кодтың деректерді, пайдаланушылардың ақпаратын және жүйені рұқсатсыз қол жеткізуден, шабуылдардан және басқа да қауіптерден қорғау қабілеті.','Құпиясөзді ашық жазбау.'],
+ ['Тестіленушілік','Тестіленушілік — бағдарламалық кодтың жұмысын тексеру, қателерін анықтау және оның қойылған талаптарға сәйкестігін бағалау қаншалықты оңай екенін көрсететін қасиет.','Шағын функцияларды жеке тексеру.'],
+ ['Модульділік','Модульділік — бағдарламаны жеке қызмет атқаратын, бір-бірімен байланысқан шағын бөліктерге бөлу принципі. Әрбір модуль белгілі бір міндетті орындап, қажет болған жағдайда басқа модульдермен өзара әрекеттеседі.','Әр әрекетке жеке функция.'],
+ ['Стандарттарды сақтау','Стандарттарды сақтау — бағдарламалық кодты белгілі бір ережелер мен қабылданған бағдарламалау талаптарына сәйкес жазу. Бұл кодтың бірізді, жүйелі және барлық әзірлеушілерге түсінікті болуын қамтамасыз етеді.','Бірыңғай атау және шегіністер.']
+];
+const ICO=['👓','🔧','🛡️','⚡','🔒','🧪','🧩','📐'];
+$('crit').innerHTML=C.map((c,k)=>'<div class="tile" tabindex="0" onclick="cd('+k+')"><span class="ic">'+ICO[k]+'</span><h3>'+c[0]+'</h3><p>Толығырақ ↗</p></div>').join('');
+function cd(k){ $('cd').innerHTML='<h3>'+C[k][0]+'</h3><p>'+C[k][1]+'</p><p class="small">Мысалы: '+C[k][2]+'</p>'; }
+
+/* пернелер */
+document.addEventListener('keydown',e=>{
+  const t=e.target.tagName;
+  if(t==='VIDEO'||t==='INPUT'||t==='TEXTAREA') return;
+  if(e.key==='ArrowRight') show(i+1);
+  if(e.key==='ArrowLeft')  show(i-1);
+  if(e.key==='f'||e.key==='F') fsT();
+  if((e.key==='Enter')&&e.target.classList.contains('tile')) e.target.click();
+});
+
+show(0);
+</script>
+</body>
+</html>
